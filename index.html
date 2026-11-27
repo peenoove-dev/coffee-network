@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ออกแบบแผนผังเครือข่ายร้านกาแฟ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#e9eef1;--card:#fff;--tx:#17262e;--mu:#5d7079;--ac:#0b7a75;--ac2:#fff;--bd:#cbd6db;--z1:#dff1ee;--z2:#e4e8f6;--ln:#34505c;--bad:#c23b2e;--ok:#1f8a4c}
+@media(prefers-color-scheme:dark){:root{--bg:#10191e;--card:#18252c;--tx:#e6eef1;--mu:#8fa5af;--ac:#3cc2b8;--ac2:#06201e;--bd:#2c3e47;--z1:#14302e;--z2:#1b2140;--ln:#9bb5c1;--bad:#ff7a6b;--ok:#55d08a}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;padding:12px}
+h1{font-size:1.35rem;margin:0 0 2px;font-weight:700}
+.sub{color:var(--mu);margin:0 0 12px}
+.wrap{display:grid;grid-template-columns:1fr 360px;gap:12px;align-items:start}
+@media(max-width:960px){.wrap{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px}
+.bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+button{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--ac)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+button.on{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
+button.danger{color:var(--bad)}
+.pal{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.pal button{display:flex;flex-direction:column;align-items:center;min-width:92px;padding:6px 8px;line-height:1.25}
+.pal small{color:var(--mu)}
+#cv{width:100%;height:auto;display:block;touch-action:none;background:var(--card);border-radius:8px;user-select:none}
+.hint{color:var(--mu);margin:8px 0 0;font-size:.9rem}
+.warn{color:var(--bad);margin:6px 0 0;font-size:.9rem}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.stats div{background:var(--bg);border-radius:8px;padding:6px 8px;font-size:.88rem}
+.stats b{display:block;font-size:1.05rem}
+.stats .bad b{color:var(--bad)}
+.stats .good b{color:var(--ok)}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{padding:5px 3px;text-align:right;border-bottom:1px solid var(--bd)}
+th:first-child,td:first-child{text-align:left}
+td input{width:76px;font:inherit;text-align:right;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:6px;padding:2px 5px}
+.total{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-weight:700}
+.total span:last-child{font-size:1.5rem;color:var(--ac)}
+svg text{font-family:inherit}
+</style>
+</head>
+<body>
+<h1>ออกแบบแผนผังเครือข่ายร้านกาแฟ</h1>
+<p class="sub">ลากอุปกรณ์ เชื่อมสาย และดูราคารวมได้ทันที</p>
+
+<div class="wrap">
+  <section class="card">
+    <div class="pal" id="pal"></div>
+    <div class="bar">
+      <button id="bMove" class="on">เลื่อนอุปกรณ์</button>
+      <button id="bLink">เชื่อมต่อสาย</button>
+      <button id="bDel" class="danger">ลบที่เลือก</button>
+      <button id="bReset">กลับเป็นผังร้านตัวอย่าง</button>
+    </div>
+    <svg id="cv" viewBox="0 0 1200 700" role="img" aria-label="แผนผังเครือข่ายร้านกาแฟ"></svg>
+    <p class="hint" id="hint"></p>
+    <div id="warn"></div>
+  </section>
+
+  <aside class="card">
+    <div class="stats" id="stats"></div>
+    <table>
+      <thead><tr><th>อุปกรณ์</th><th>จำนวน</th><th>ราคา/ชิ้น</th><th>รวม</th></tr></thead>
+      <tbody id="bom"></tbody>
+    </table>
+    <div class="total"><span>ราคารวมทั้งหมด</span><span id="total"></span></div>
+  </aside>
+</div>
+
+<script>
+// ---------- ข้อมูลอุปกรณ์ (ราคาเป็นบาท แก้ไขได้ในตารางด้านขวา) ----------
+const CAT = {
+  internet:{n:'อินเทอร์เน็ต',      i:'🌐',p:0,    ports:1, free:true},
+  modem:   {n:'โมเด็ม/ONT',        i:'📟',p:1500, ports:2},
+  router:  {n:'เราเตอร์/ไฟร์วอลล์', i:'🛜',p:6900, ports:5},
+  switch:  {n:'สวิตช์ PoE 24 พอร์ต',i:'🔀',p:7900, ports:24},
+  ap:      {n:'Wi-Fi Access Point', i:'📶',p:3500, ports:1},
+  wifi:    {n:'ลูกค้า Wi-Fi ×10',   i:'📱',p:0,    ports:1, free:true, wireless:true},
+  seat:    {n:'ที่นั่ง LAN 1 สาย',  i:'💺',p:350,  ports:1},
+  pos:     {n:'เครื่อง POS',        i:'🧾',p:12000,ports:1},
+  pc:      {n:'คอมพิวเตอร์ทำงาน',   i:'🖥️',p:15000,ports:1},
+  printer: {n:'เครื่องพิมพ์ใบเสร็จ',i:'🖨️',p:3500, ports:1}
+};
+const KEY = 'coffee-net-v1';
+const $ = s => document.querySelector(s);
+const svg = $('#cv');
+const baht = n => '฿' + Number(n).toLocaleString('th-TH');
+const uid = () => 'n' + Math.random().toString(36).slice(2, 8);
+
+// ---------- ผังตัวอย่างตามโจทย์ ----------
+function preset(){
+  const N = [], L = [];
+  const add = (t,x,y) => { const id = uid(); N.push({id,t,x,y}); return id; };
+  const link = (a,b) => L.push({a,b});
+  const net = add('internet',600,45), mo = add('modem',600,115),
+        ro = add('router',600,185),   sw = add('switch',600,265);
+  link(net,mo); link(mo,ro); link(ro,sw);
+  for(let i=0;i<2;i++){                       // โซน 1: Wi-Fi 20 คน
+    const ap = add('ap',150+i*180,375), w = add('wifi',150+i*180,535);
+    link(sw,ap); link(ap,w);
+  }
+  for(let i=0;i<10;i++){                      // โซน 2: ที่นั่ง LAN 10 ที่
+    link(sw, add('seat',540+(i%5)*120, 400+Math.floor(i/5)*95));
+  }
+  [['pos',600],['pos',720],['pc',880],['pc',1000]].forEach(([t,x]) => link(sw, add(t,x,610)));
+  return {N, L, P:{}, cable:60};
+}
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+let S = load() || preset();
+let mode = 'move', sel = null, pend = null, drag = null;
+const price = t => (S.P[t] ?? CAT[t].p);
+
+// ---------- วาดแผนผัง ----------
+function render(){
+  const nm = Object.fromEntries(S.N.map(n => [n.id, n]));
+  let h = `<rect x="20" y="330" width="430" height="350" rx="14" fill="var(--z1)" stroke="var(--bd)"/>
+    <text x="36" y="356" font-size="16" font-weight="600" fill="var(--tx)">โซนที่ 1: ลูกค้านั่งใช้ Wi-Fi (20 คน)</text>
+    <rect x="470" y="330" width="710" height="350" rx="14" fill="var(--z2)" stroke="var(--bd)"/>
+    <text x="486" y="356" font-size="16" font-weight="600" fill="var(--tx)">โซนที่ 2: ที่นั่งเสียบสาย LAN 10 ที่ และหลังเคาน์เตอร์</text>
+    <text x="486" y="660" font-size="13" fill="var(--mu)">เครื่อง POS ×2 และเครื่องทำงาน ×2</text>`;
+  S.L.forEach((l,i) => {
+    const a = nm[l.a], b = nm[l.b]; if(!a||!b) return;
+    const wl = CAT[a.t].wireless || CAT[b.t].wireless;
+    const on = sel && sel.k === 'l' && sel.i === i;
+    h += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${on?'var(--ac)':'var(--ln)'}" stroke-width="${on?4:2}" ${wl?'stroke-dasharray="7 6"':''}/>
+          <line data-l="${i}" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="transparent" stroke-width="16" style="cursor:pointer"/>`;
+  });
+  S.N.forEach(n => {
+    const c = CAT[n.t], on = sel && sel.k === 'n' && sel.i === n.id, pd = pend === n.id;
+    h += `<g data-id="${n.id}" transform="translate(${n.x-50},${n.y-32})" style="cursor:${mode==='link'?'crosshair':'grab'}">
+      <rect width="100" height="64" rx="10" fill="var(--card)" stroke="${on||pd?'var(--ac)':'var(--bd)'}" stroke-width="${on||pd?3:1.5}"/>
+      <text x="50" y="24" font-size="22" text-anchor="middle">${c.i}</text>
+      <text x="50" y="43" font-size="11" text-anchor="middle" fill="var(--tx)">${c.n}</text>
+      <text x="50" y="57" font-size="11" font-weight="700" text-anchor="middle" fill="var(--ac)">${c.free ? 'ฟรี/ของลูกค้า' : baht(price(n.t))}</text>
+    </g>`;
+  });
+  svg.innerHTML = h;
+  summary();
+  hint();
+}
+
+// ---------- สรุปราคาและตรวจจำนวนพอร์ต ----------
+function summary(){
+  const cnt = {}; S.N.forEach(n => cnt[n.t] = (cnt[n.t]||0) + 1);
+  const wired = S.L.filter(l => {
+    const a = S.N.find(n => n.id === l.a), b = S.N.find(n => n.id === l.b);
+    return a && b && !CAT[a.t].wireless && !CAT[b.t].wireless;
+  }).length;
+  let total = 0, rows = '';
+  Object.keys(CAT).forEach(t => {
+    if(!cnt[t]) return;
+    const sub = CAT[t].free ? 0 : cnt[t] * price(t); total += sub;
+    rows += `<tr><td>${CAT[t].i} ${CAT[t].n}</td><td>${cnt[t]}</td>
+      <td>${CAT[t].free ? '-' : `<input type="number" min="0" value="${price(t)}" data-p="${t}" aria-label="ราคา ${CAT[t].n}">`}</td>
+      <td>${baht(sub)}</td></tr>`;
+  });
+  const cableSub = wired * S.cable; total += cableSub;
+  rows += `<tr><td>🔌 สาย LAN (${wired} เส้น)</td><td>${wired}</td>
+    <td><input type="number" min="0" value="${S.cable}" data-cable aria-label="ราคาสาย LAN ต่อเส้น"></td><td>${baht(cableSub)}</td></tr>`;
+  $('#bom').innerHTML = rows;
+  $('#total').textContent = baht(total);
+
+  const seats = cnt.seat||0, wifi = (cnt.wifi||0) * 10;
+  const seatOk = seats === 10, wifiOk = wifi === 20;
+  $('#stats').innerHTML =
+    `<div class="${seatOk?'good':'bad'}"><b>${seats} / 10</b>ที่นั่ง LAN</div>
+     <div class="${wifiOk?'good':'bad'}"><b>${wifi} / 20</b>ลูกค้า Wi-Fi</div>
+     <div class="${(cnt.pos||0)===2?'good':'bad'}"><b>${cnt.pos||0} / 2</b>เครื่อง POS</div>
+     <div class="${(cnt.pc||0)===2?'good':'bad'}"><b>${cnt.pc||0} / 2</b>เครื่องทำงาน</div>`;
+
+  const used = {}; S.L.forEach(l => {
+    const a = S.N.find(n => n.id === l.a), b = S.N.find(n => n.id === l.b);
+    if(!a || !b || CAT[a.t].wireless || CAT[b.t].wireless) return;
+    used[a.id] = (used[a.id]||0) + 1; used[b.id] = (used[b.id]||0) + 1;
+  });
+  let w = '';
+  S.N.forEach(n => { if((used[n.id]||0) > CAT[n.t].ports) w += `<p class="warn">⚠ ${CAT[n.t].n} ใช้ ${used[n.id]} พอร์ต แต่มีแค่ ${CAT[n.t].ports} พอร์ต</p>`; });
+  const sw = S.N.find(n => n.t === 'switch');
+  if(sw) w += `<p class="hint">สวิตช์ใช้ไป ${used[sw.id]||0} / ${CAT.switch.ports} พอร์ต</p>`;
+  $('#warn').innerHTML = w;
+  save();
+}
+function hint(){
+  $('#hint').textContent = mode === 'link'
+    ? (pend ? 'เลือกอุปกรณ์ปลายทางเพื่อเชื่อมสาย' : 'เลือกอุปกรณ์ต้นทาง แล้วเลือกอุปกรณ์ปลายทาง (เส้นประ = ไร้สาย)')
+    : 'ลากอุปกรณ์เพื่อย้าย แตะอุปกรณ์หรือเส้นเพื่อเลือก แล้วกด "ลบที่เลือก"';
+}
+
+// ---------- โต้ตอบ ----------
+function pt(e){
+  const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(svg.getScreenCTM().inverse());
+}
+svg.addEventListener('pointerdown', e => {
+  const g = e.target.closest('[data-id]'), l = e.target.closest('[data-l]');
+  if(g){
+    const id = g.dataset.id;
+    if(mode === 'link'){
+      if(!pend){ pend = id; }
+      else {
+        if(pend !== id && !S.L.some(k => (k.a===pend&&k.b===id)||(k.a===id&&k.b===pend))) S.L.push({a:pend,b:id});
+        pend = null;
+      }
+    } else {
+      sel = {k:'n', i:id};
+      const n = S.N.find(n => n.id === id), p = pt(e);
+      drag = {id, dx:n.x-p.x, dy:n.y-p.y};
+      svg.setPointerCapture(e.pointerId);
+    }
+  } else if(l){ sel = {k:'l', i:+l.dataset.l}; }
+  else { sel = null; pend = null; }
+  render();
+});
+svg.addEventListener('pointermove', e => {
+  if(!drag) return;
+  const n = S.N.find(n => n.id === drag.id), p = pt(e);
+  n.x = Math.max(55, Math.min(1145, Math.round(p.x + drag.dx)));
+  n.y = Math.max(35, Math.min(665, Math.round(p.y + drag.dy)));
+  render();
+});
+svg.addEventListener('pointerup', () => { drag = null; });
+
+function setMode(m){
+  mode = m; pend = null;
+  $('#bMove').classList.toggle('on', m === 'move');
+  $('#bLink').classList.toggle('on', m === 'link');
+  render();
+}
+function delSel(){
+  if(!sel) return;
+  if(sel.k === 'n'){ S.N = S.N.filter(n => n.id !== sel.i); S.L = S.L.filter(l => l.a !== sel.i && l.b !== sel.i); }
+  else S.L.splice(sel.i, 1);
+  sel = null; render();
+}
+$('#bMove').onclick = () => setMode('move');
+$('#bLink').onclick = () => setMode('link');
+$('#bDel').onclick = delSel;
+$('#bReset').onclick = () => { if(confirm('กลับเป็นผังตัวอย่างและราคาเริ่มต้น?')){ S = preset(); sel = null; render(); } };
+document.addEventListener('keydown', e => {
+  if((e.key === 'Delete' || e.key === 'Backspace') && !/INPUT/.test(document.activeElement.tagName)) delSel();
+});
+$('#bom').addEventListener('change', e => {
+  const v = Math.max(0, +e.target.value || 0);
+  if(e.target.dataset.p) S.P[e.target.dataset.p] = v;
+  if('cable' in e.target.dataset) S.cable = v;
+  render();
+});
+
+// ---------- แถบเลือกอุปกรณ์ ----------
+let k = 0;
+$('#pal').innerHTML = Object.keys(CAT).map(t =>
+  `<button data-add="${t}">${CAT[t].i} ${CAT[t].n}<small>${CAT[t].free ? 'ฟรี' : baht(CAT[t].p)}</small></button>`).join('');
+$('#pal').addEventListener('click', e => {
+  const b = e.target.closest('[data-add]'); if(!b) return;
+  const id = uid(); k = (k + 1) % 8;
+  S.N.push({id, t:b.dataset.add, x:80 + k*30, y:250 + k*10});
+  sel = {k:'n', i:id}; render();
+});
+render();
+</script>
+</body>
+</html>
