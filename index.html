@@ -3,89 +3,288 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#3A2619">
 <title>ออกแบบแผนผังเครือข่ายร้านกาแฟ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600&family=Prompt:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e9eef1;--card:#fff;--tx:#17262e;--mu:#5d7079;--ac:#0b7a75;--ac2:#fff;--bd:#cbd6db;--z1:#dff1ee;--z2:#e4e8f6;--ln:#34505c;--bad:#c23b2e;--ok:#1f8a4c}
-@media(prefers-color-scheme:dark){:root{--bg:#10191e;--card:#18252c;--tx:#e6eef1;--mu:#8fa5af;--ac:#3cc2b8;--ac2:#06201e;--bd:#2c3e47;--z1:#14302e;--z2:#1b2140;--ln:#9bb5c1;--bad:#ff7a6b;--ok:#55d08a}}
+:root{
+  --bg:#F6EEE2; --card:#FFFDF9; --canvas:#FFFBF4; --ink:#2B1D14; --mu:#7A6556; --bd:#E7DAC8; --bd2:#D8C6AE;
+  --brand:#3A2619; --brand-ink:#FFF4E4; --accent:#C4682A; --accent-t:#FBE5D0;
+  --ok:#3B8554; --ok-t:#DFF0E3; --warn:#B86C12; --warn-t:#FCEACB; --bad:#C0412D; --bad-t:#FADBD3;
+  --net:#5565A6;  --net-t:#E2E6F6;
+  --core:#2B6A72; --core-t:#D8ECEE;
+  --wifi:#C07414; --wifi-t:#FBE8CB;
+  --lan:#46874A;  --lan-t:#DDEED8;
+  --pos:#A5453A;  --pos-t:#F6DAD3;
+  --z0:#EDF3F2; --z0b:#C7DCDC; --z1:#FFF3E0; --z1b:#EFD6AE; --z2:#EDF5E6; --z2b:#CBE0BE;
+  --ln:#7A6050; --dot:#E9DCC9;
+  --shadow:0 1px 2px rgba(70,40,20,.06),0 10px 28px rgba(70,40,20,.08);
+  --head:"Prompt","Noto Sans Thai",system-ui,sans-serif;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#17110D; --card:#241B15; --canvas:#1D1612; --ink:#F6EBDD; --mu:#B9A593; --bd:#3A2D24; --bd2:#52402F;
+  --brand:#F2C48D; --brand-ink:#2B1A0E; --accent:#EE9A55; --accent-t:#46301E;
+  --ok:#6FCB8B; --ok-t:#1F3527; --warn:#EDAA52; --warn-t:#3F2E14; --bad:#FF8E78; --bad-t:#4A2620;
+  --net:#9DABEB; --net-t:#272C4A;
+  --core:#6FC5CE; --core-t:#173A3F;
+  --wifi:#F0B05A; --wifi-t:#46331A;
+  --lan:#8CCB8F;  --lan-t:#233B24;
+  --pos:#F09A8C;  --pos-t:#47251F;
+  --z0:#1A2A2B; --z0b:#2E4748; --z1:#2B2013; --z1b:#4F3C22; --z2:#1D2A1B; --z2b:#37502F;
+  --ln:#A58C79; --dot:#2B2119;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 28px rgba(0,0,0,.35);
+}}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--tx);font:15px/1.5 "IBM Plex Sans Thai",system-ui,sans-serif;padding:12px}
-h1{font-size:1.35rem;margin:0 0 2px;font-weight:700}
-.sub{color:var(--mu);margin:0 0 12px}
-.wrap{display:grid;grid-template-columns:1fr 360px;gap:12px;align-items:start}
-@media(max-width:960px){.wrap{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px}
-.bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-button{font:inherit;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:8px;padding:6px 10px;cursor:pointer}
-button:hover{border-color:var(--ac)}
-button:focus-visible,input:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-button.on{background:var(--ac);color:var(--ac2);border-color:var(--ac)}
-button.danger{color:var(--bad)}
-.pal{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
-.pal button{display:flex;flex-direction:column;align-items:center;min-width:92px;padding:6px 8px;line-height:1.25}
-.pal small{color:var(--mu)}
-#cv{width:100%;height:auto;display:block;touch-action:none;background:var(--card);border-radius:8px;user-select:none}
-.hint{color:var(--mu);margin:8px 0 0;font-size:.9rem}
-.warn{color:var(--bad);margin:6px 0 0;font-size:.9rem}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-.stats div{background:var(--bg);border-radius:8px;padding:6px 8px;font-size:.88rem}
-.stats b{display:block;font-size:1.05rem}
-.stats .bad b{color:var(--bad)}
-.stats .good b{color:var(--ok)}
-table{width:100%;border-collapse:collapse;font-size:.88rem}
-th,td{padding:5px 3px;text-align:right;border-bottom:1px solid var(--bd)}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 "Noto Sans Thai",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.page{max-width:1600px;margin:0 auto;padding:20px 20px 40px}
+h1,h2,h3{font-family:var(--head);margin:0;line-height:1.3}
+h1{font-size:1.7rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.05rem;font-weight:600}
+.sub{color:var(--mu);margin:4px 0 0}
+
+/* ---------- วิธีใช้ ---------- */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}
+.step{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:12px 14px}
+.step i{flex:none;width:30px;height:30px;border-radius:50%;background:var(--brand);color:var(--brand-ink);font:700 .95rem/30px var(--head);text-align:center;font-style:normal}
+.step b{display:block;font-family:var(--head);font-weight:600;font-size:.98rem}
+.step span{color:var(--mu);font-size:.9rem;line-height:1.45;display:block}
+
+/* ---------- เลย์เอาต์ ---------- */
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px;align-items:start}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:16px;box-shadow:var(--shadow)}
+.main{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;min-width:0}
+.side{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
+.side .card{padding:16px 18px}
+.side h2{margin-bottom:10px}
+
+/* ---------- เลือกอุปกรณ์ ---------- */
+.pal{display:flex;flex-wrap:wrap;gap:10px 22px;margin-bottom:14px}
+.grp .gl{font:600 .78rem var(--head);color:var(--mu);letter-spacing:.04em;margin-bottom:6px}
+.grp .row{display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;color:inherit;cursor:pointer}
+.chip{display:flex;align-items:center;gap:9px;background:var(--card);border:1.5px solid var(--bd);border-radius:14px;padding:6px 12px 6px 6px;text-align:left;transition:transform .12s,border-color .12s,box-shadow .12s}
+.chip:hover{border-color:var(--c);box-shadow:0 4px 12px rgba(70,40,20,.1);transform:translateY(-1px)}
+.chip:active{transform:translateY(0)}
+.chip .ic{flex:none;width:38px;height:38px;border-radius:11px;background:var(--ct);color:var(--c);display:grid;place-items:center}
+.chip b{display:block;font-weight:500;font-size:.9rem;line-height:1.25;white-space:nowrap}
+.chip small{display:block;color:var(--mu);font-size:.8rem;line-height:1.2}
+.chip small em{font-style:normal;color:var(--c);font-weight:600}
+.k-net{--c:var(--net);--ct:var(--net-t)} .k-core{--c:var(--core);--ct:var(--core-t)} .k-wifi{--c:var(--wifi);--ct:var(--wifi-t)}
+.k-lan{--c:var(--lan);--ct:var(--lan-t)} .k-pos{--c:var(--pos);--ct:var(--pos-t)}
+
+/* ---------- แถบเครื่องมือ ---------- */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.seg{display:inline-flex;background:var(--bg);border-radius:14px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:11px;padding:9px 16px;font-weight:500;display:flex;gap:8px;align-items:center;min-height:42px;color:var(--mu)}
+.seg button.on{background:var(--brand);color:var(--brand-ink);box-shadow:0 2px 8px rgba(40,20,10,.25)}
+.seg button:not(.on):hover{color:var(--ink)}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1.5px solid var(--bd2);background:var(--card);border-radius:12px;padding:8px 14px;min-height:42px;font-weight:500;display:flex;gap:7px;align-items:center}
+.btn:hover:not(:disabled){border-color:var(--accent)}
+.btn.danger{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 40%,var(--bd))}
+.btn.danger:hover:not(:disabled){background:var(--bad-t);border-color:var(--bad)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+.hint{display:flex;gap:10px;align-items:center;background:var(--accent-t);color:var(--ink);border-radius:12px;padding:9px 14px;margin-bottom:10px;font-size:.95rem;min-height:46px}
+.hint svg{flex:none;color:var(--accent)}
+.hint.link{background:var(--net-t)} .hint.link svg{color:var(--net)}
+.hint.pend{background:var(--ok-t)} .hint.pend svg{color:var(--ok)}
+
+/* ---------- ผัง ---------- */
+.cvwrap{overflow-x:auto;border-radius:16px;border:1px solid var(--bd);background:var(--canvas)}
+#cv{display:block;width:100%;min-width:880px;height:auto;user-select:none;-webkit-user-select:none;touch-action:pan-x pan-y}
+#cv text{font-family:"Noto Sans Thai",system-ui,sans-serif}
+.node{cursor:grab}
+.node.linkmode{cursor:crosshair}
+.node .box{filter:drop-shadow(0 2px 3px rgba(70,40,20,.14));transition:filter .12s}
+.node:hover .box{filter:drop-shadow(0 4px 10px rgba(70,40,20,.25))}
+.node.drag{cursor:grabbing}
+.node.drag .box{filter:drop-shadow(0 10px 18px rgba(70,40,20,.32))}
+.pulse{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.pulse{animation:none}}
+.scrollhint{display:none;margin:0 0 8px;color:var(--mu);font-size:.85rem}
+.legend{display:flex;flex-wrap:wrap;gap:8px 20px;margin:12px 2px 0;color:var(--mu);font-size:.88rem}
+.legend span{display:flex;align-items:center;gap:8px}
+.legend svg{flex:none}
+
+/* ---------- ราคารวม ---------- */
+.total{background:var(--brand);color:var(--brand-ink);border:0;position:relative;overflow:hidden}
+.total .lbl{font-size:.9rem;opacity:.8}
+.total b{display:block;font:700 2.5rem/1.15 var(--head);letter-spacing:-.01em;margin:2px 0}
+.total .note{font-size:.9rem;opacity:.9;display:block}
+.total .lbl{opacity:.9!important}
+.total::after{content:"";position:absolute;right:-30px;top:-30px;width:130px;height:130px;border-radius:50%;background:var(--brand-ink);opacity:.07}
+
+/* ---------- เช็กลิสต์ ---------- */
+.prog{display:flex;align-items:center;gap:12px;margin:0 0 12px}
+.bar{flex:1;height:10px;background:var(--bg);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.bar.done i{background:var(--ok)}
+.prog b{font:600 .95rem var(--head);white-space:nowrap}
+.checks{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ck{display:flex;gap:11px;align-items:center;padding:9px 11px;border-radius:14px;background:var(--bg)}
+.ck .mark{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--warn-t);color:var(--warn)}
+.ck.ok .mark{background:var(--ok-t);color:var(--ok)}
+.ck.bad .mark{background:var(--bad-t);color:var(--bad)}
+.ck .ct{flex:1;min-width:0}
+.ck .ct b{display:block;font-weight:500;font-size:.95rem;line-height:1.3}
+.ck .ct small{display:block;color:var(--mu);font-size:.82rem;line-height:1.35}
+.ck.bad .ct small{color:var(--bad)}
+.mini{border:1.5px solid var(--accent);background:transparent;color:var(--accent);border-radius:10px;padding:3px 10px;font-weight:600;font-size:.85rem;white-space:nowrap}
+.mini:hover{background:var(--accent);color:var(--card)}
+.allok{background:var(--ok-t);color:var(--ok);border-radius:14px;padding:10px 12px;margin-bottom:10px;font-weight:600;display:flex;gap:8px;align-items:center}
+
+/* ---------- พอร์ต ---------- */
+.port{display:grid;grid-template-columns:96px 1fr auto;gap:10px;align-items:center;margin:8px 0;font-size:.9rem}
+.port .bar{height:9px}
+.port .bar i{background:var(--core)}
+.port.over .bar i{background:var(--bad)}
+.port.over b{color:var(--bad)}
+.empty{color:var(--mu);font-size:.9rem;margin:0}
+
+/* ---------- ตารางราคา ---------- */
+.note{color:var(--mu);font-size:.85rem;margin:-4px 0 8px}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{font:600 .78rem var(--head);color:var(--mu);text-align:right;padding:4px 4px 6px;letter-spacing:.03em}
+td{padding:7px 4px;text-align:right;border-top:1px solid var(--bd)}
 th:first-child,td:first-child{text-align:left}
-td input{width:76px;font:inherit;text-align:right;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:6px;padding:2px 5px}
-.total{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-weight:700}
-.total span:last-child{font-size:1.5rem;color:var(--ac)}
-svg text{font-family:inherit}
+.nm{display:flex;align-items:center;gap:8px;line-height:1.25}
+.nm .ic{flex:none;width:28px;height:28px;border-radius:8px;background:var(--ct);color:var(--c);display:grid;place-items:center}
+td input{width:88px;font:inherit;text-align:right;background:var(--bg);color:var(--ink);border:1.5px solid var(--bd);border-radius:9px;padding:4px 7px}
+td input:focus{outline:none;border-color:var(--accent);background:var(--card)}
+td.sum{font-weight:600}
+
+@media(max-width:1100px){.wrap{grid-template-columns:minmax(0,1fr)}.side{grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}.side .total{grid-column:1/-1}}
+@media(max-width:720px){
+  .page{padding:14px 12px 32px}
+  h1{font-size:1.35rem}
+  .steps{grid-template-columns:1fr}
+  .scrollhint{display:block}
+  .card{padding:12px;border-radius:18px}
+  .total b{font-size:2.1rem}
+  .seg button,.btn{padding:8px 12px}
+}
 </style>
 </head>
 <body>
-<h1>ออกแบบแผนผังเครือข่ายร้านกาแฟ</h1>
-<p class="sub">ลากอุปกรณ์ เชื่อมสาย และดูราคารวมได้ทันที</p>
+<div class="page">
+  <header>
+    <h1>ออกแบบแผนผังเครือข่ายร้านกาแฟ</h1>
+    <p class="sub">ลากอุปกรณ์มาวาง ต่อสายให้ครบ แล้วดูราคารวมและเช็กลิสต์ได้ทันที</p>
+  </header>
 
-<div class="wrap">
-  <section class="card">
-    <div class="pal" id="pal"></div>
-    <div class="bar">
-      <button id="bMove" class="on">เลื่อนอุปกรณ์</button>
-      <button id="bLink">เชื่อมต่อสาย</button>
-      <button id="bDel" class="danger">ลบที่เลือก</button>
-      <button id="bReset">กลับเป็นผังร้านตัวอย่าง</button>
+  <div class="steps" aria-label="วิธีใช้">
+    <div class="step"><i>1</i><div><b>เลือกอุปกรณ์</b><span>กดชิ้นที่ต้องการจากแถบด้านบน อุปกรณ์จะโผล่ในช่อง "อุปกรณ์ใหม่"</span></div></div>
+    <div class="step"><i>2</i><div><b>ลากไปวาง</b><span>ลากเข้าโซนที่เหมาะสม เช่น Access Point ไปไว้โซน Wi-Fi</span></div></div>
+    <div class="step"><i>3</i><div><b>ต่อสายให้ถึงอินเทอร์เน็ต</b><span>กด "ต่อสาย" แล้วแตะอุปกรณ์ 2 ชิ้นที่ต้องการเชื่อมกัน</span></div></div>
+  </div>
+
+  <div class="wrap">
+    <div class="main">
+    <section class="card">
+      <div class="pal" id="pal"></div>
+
+      <div class="tools">
+        <div class="seg" role="group" aria-label="โหมด">
+          <button id="bMove" class="on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>ย้ายอุปกรณ์</button>
+          <button id="bLink"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>ต่อสาย</button>
+        </div>
+        <div class="acts">
+          <button id="bDel" class="btn danger" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v6M14 10v6"/></svg><span id="delTx">ลบที่เลือก</span></button>
+          <button id="bReset" class="btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/></svg>เริ่มใหม่เป็นผังตัวอย่าง</button>
+        </div>
+      </div>
+
+      <div class="hint" id="hint" role="status"></div>
+      <p class="scrollhint">เลื่อนผังไปทางซ้าย-ขวาได้ แล้วใช้สองนิ้วถ่างเพื่อซูม</p>
+      <div class="cvwrap"><svg id="cv" viewBox="0 0 1280 780" role="img" aria-label="แผนผังเครือข่ายร้านกาแฟ"></svg></div>
+
+      <div class="legend">
+        <span><svg width="38" height="10"><path d="M2 5h34" stroke="var(--ln)" stroke-width="3" stroke-linecap="round"/></svg>สาย LAN</span>
+        <span><svg width="38" height="10"><path d="M2 5h34" stroke="var(--wifi)" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 7"/></svg>Wi-Fi (ไร้สาย)</span>
+        <span><svg width="22" height="18"><rect x="2" y="2" width="18" height="14" rx="5" fill="none" stroke="var(--warn)" stroke-width="2" stroke-dasharray="4 3"/></svg>ยังต่อไม่ถึงอินเทอร์เน็ต</span>
+      </div>
+    </section>
+      <section class="card">
+        <h2>รายการอุปกรณ์และราคา</h2>
+        <p class="note">แก้ราคาต่อชิ้นได้ในช่อง ยอดรวมจะอัปเดตเอง</p>
+        <table>
+          <thead><tr><th>อุปกรณ์</th><th>จำนวน</th><th>ราคา/ชิ้น</th><th>รวม</th></tr></thead>
+          <tbody id="bom"></tbody>
+        </table>
+      </section>
     </div>
-    <svg id="cv" viewBox="0 0 1200 700" role="img" aria-label="แผนผังเครือข่ายร้านกาแฟ"></svg>
-    <p class="hint" id="hint"></p>
-    <div id="warn"></div>
-  </section>
 
-  <aside class="card">
-    <div class="stats" id="stats"></div>
-    <table>
-      <thead><tr><th>อุปกรณ์</th><th>จำนวน</th><th>ราคา/ชิ้น</th><th>รวม</th></tr></thead>
-      <tbody id="bom"></tbody>
-    </table>
-    <div class="total"><span>ราคารวมทั้งหมด</span><span id="total"></span></div>
-  </aside>
+    <aside class="side">
+      <section class="card total">
+        <span class="lbl">ราคารวมโดยประมาณ</span>
+        <b id="total"></b>
+        <span class="note" id="totalNote"></span>
+      </section>
+      <section class="card">
+        <h2>เช็กลิสต์ตามโจทย์</h2>
+        <div id="chk"></div>
+      </section>
+      <section class="card">
+        <h2>การใช้พอร์ต</h2>
+        <div id="ports"></div>
+      </section>
+    </aside>
+  </div>
 </div>
 
 <script>
-// ---------- ข้อมูลอุปกรณ์ (ราคาเป็นบาท แก้ไขได้ในตารางด้านขวา) ----------
+// ---------- ข้อมูลอุปกรณ์ (ราคาเป็นบาท แก้ได้ในตารางด้านขวา) ----------
+// k = หมวดสี, s = ชื่อสั้นบนผัง, ports = จำนวนพอร์ตสาย LAN
 const CAT = {
-  internet:{n:'อินเทอร์เน็ต',      i:'🌐',p:0,    ports:1, free:true},
-  modem:   {n:'โมเด็ม/ONT',        i:'📟',p:1500, ports:2},
-  router:  {n:'เราเตอร์/ไฟร์วอลล์', i:'🛜',p:6900, ports:5},
-  switch:  {n:'สวิตช์ PoE 24 พอร์ต',i:'🔀',p:7900, ports:24},
-  ap:      {n:'Wi-Fi Access Point', i:'📶',p:3500, ports:1},
-  wifi:    {n:'ลูกค้า Wi-Fi ×10',   i:'📱',p:0,    ports:1, free:true, wireless:true},
-  seat:    {n:'ที่นั่ง LAN 1 สาย',  i:'💺',p:350,  ports:1},
-  pos:     {n:'เครื่อง POS',        i:'🧾',p:12000,ports:1},
-  pc:      {n:'คอมพิวเตอร์ทำงาน',   i:'🖥️',p:15000,ports:1},
-  printer: {n:'เครื่องพิมพ์ใบเสร็จ',i:'🖨️',p:3500, ports:1}
+  internet:{n:'อินเทอร์เน็ต',        s:'อินเทอร์เน็ต',  k:'net', p:0,    ports:1, free:true, tag:'ผู้ให้บริการ'},
+  modem:   {n:'โมเด็ม/ONT',          s:'โมเด็ม/ONT',    k:'core',p:1500, ports:2},
+  router:  {n:'เราเตอร์/ไฟร์วอลล์',   s:'เราเตอร์',      k:'core',p:6900, ports:5},
+  switch:  {n:'สวิตช์ PoE 24 พอร์ต',  s:'สวิตช์ PoE 24', k:'core',p:7900, ports:24},
+  ap:      {n:'Wi-Fi Access Point',   s:'Wi-Fi AP',      k:'wifi',p:3500, ports:1},
+  wifi:    {n:'ลูกค้า Wi-Fi ×10',     s:'ลูกค้า ×10 คน', k:'wifi',p:0,    ports:1, free:true, wireless:true, tag:'ไม่คิดราคา'},
+  seat:    {n:'ที่นั่ง LAN 1 สาย',    s:'ที่นั่ง LAN',   k:'lan', p:350,  ports:1},
+  pos:     {n:'เครื่อง POS',          s:'เครื่อง POS',   k:'pos', p:12000,ports:1},
+  pc:      {n:'คอมพิวเตอร์ทำงาน',     s:'คอมพิวเตอร์',   k:'pos', p:15000,ports:1},
+  printer: {n:'เครื่องพิมพ์ใบเสร็จ',  s:'เครื่องพิมพ์',  k:'pos', p:3500, ports:1}
 };
-const KEY = 'coffee-net-v1';
+const GROUPS = [
+  {t:'โครงข่ายหลัก',  items:['internet','modem','router','switch']},
+  {t:'ฝั่งลูกค้า',     items:['ap','wifi','seat']},
+  {t:'หลังเคาน์เตอร์', items:['pos','pc','printer']}
+];
+// เป้าหมายตามโจทย์
+const GOALS = [
+  {t:'seat', label:'ที่นั่ง LAN',      want:10, per:1,  unit:'ที่'},
+  {t:'wifi', label:'ลูกค้า Wi-Fi',     want:20, per:10, unit:'คน'},
+  {t:'pos',  label:'เครื่อง POS',      want:2,  per:1,  unit:'เครื่อง'},
+  {t:'pc',   label:'เครื่องทำงาน',     want:2,  per:1,  unit:'เครื่อง'}
+];
+
+// ไอคอนเส้น (viewBox 24)
+const ICON = {
+  internet:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3.2 3.2 3.2 14.8 0 18M12 3c-3.2 3.2-3.2 14.8 0 18"/>',
+  modem:   '<rect x="3" y="12" width="18" height="8" rx="2"/><path d="M7 16h.01M11 16h.01M16 16h2M12 12V6.5M9 8.2a4 4 0 0 1 6 0"/>',
+  router:  '<rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 16.5h.01M11 16.5h.01M6 13V5M18 13V5"/>',
+  switch:  '<rect x="2.5" y="8" width="19" height="9" rx="2"/><path d="M6.5 11.5v2.5M10.5 11.5v2.5M14.5 11.5v2.5M18 11.5v2.5"/>',
+  ap:      '<path d="M2 9a14 14 0 0 1 20 0M5.2 12.4a9.5 9.5 0 0 1 13.6 0M8.5 15.8a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1.1"/>',
+  wifi:    '<rect x="7" y="2.5" width="10" height="19" rx="2.6"/><path d="M11 18.5h2"/>',
+  seat:    '<rect x="5" y="5" width="14" height="10" rx="1.8"/><path d="M2.5 19h19"/>',
+  pos:     '<rect x="5" y="3" width="14" height="7" rx="1.6"/><rect x="3" y="12" width="18" height="9" rx="2"/><path d="M7 16.5h.01M11 16.5h.01M15 16.5h2"/>',
+  pc:      '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8M12 16v5"/>',
+  printer: '<path d="M7 9V3h10v6"/><rect x="3" y="9" width="18" height="8" rx="2"/><rect x="7" y="14" width="10" height="7" rx="1"/>'
+};
+const svgI = (t, px) => `<svg width="${px}" height="${px}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[t]}</svg>`;
+const CHECK = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+const ALERT = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 6v8M12 18.5h.01"/></svg>';
+
+const KEY = 'coffee-net-v2';
+const NW = 132, NH = 96;           // ขนาดการ์ดอุปกรณ์บนผัง
 const $ = s => document.querySelector(s);
 const svg = $('#cv');
 const baht = n => '฿' + Number(n).toLocaleString('th-TH');
@@ -96,107 +295,214 @@ function preset(){
   const N = [], L = [];
   const add = (t,x,y) => { const id = uid(); N.push({id,t,x,y}); return id; };
   const link = (a,b) => L.push({a,b});
-  const net = add('internet',600,45), mo = add('modem',600,115),
-        ro = add('router',600,185),   sw = add('switch',600,265);
+  const net = add('internet',130,108), mo = add('modem',300,108),
+        ro = add('router',470,108),    sw = add('switch',640,108);
   link(net,mo); link(mo,ro); link(ro,sw);
-  for(let i=0;i<2;i++){                       // โซน 1: Wi-Fi 20 คน
-    const ap = add('ap',150+i*180,375), w = add('wifi',150+i*180,535);
+  for(let i=0;i<2;i++){                          // โซน 1: Wi-Fi 20 คน
+    const ap = add('ap',130+i*200,340), w = add('wifi',130+i*200,545);
     link(sw,ap); link(ap,w);
   }
-  for(let i=0;i<10;i++){                      // โซน 2: ที่นั่ง LAN 10 ที่
-    link(sw, add('seat',540+(i%5)*120, 400+Math.floor(i/5)*95));
+  for(let i=0;i<10;i++){                         // โซน 2: ที่นั่ง LAN 10 ที่
+    link(sw, add('seat',570+(i%5)*146, 340+Math.floor(i/5)*125));
   }
-  [['pos',600],['pos',720],['pc',880],['pc',1000]].forEach(([t,x]) => link(sw, add(t,x,610)));
+  [['pos',600],['pos',740],['pc',920],['pc',1060]].forEach(([t,x]) => link(sw, add(t,x,660)));
   return {N, L, P:{}, cable:60};
 }
-function load(){ try{ return JSON.parse(localStorage.getItem(KEY)); }catch(e){ return null; } }
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY));
+    return s && Array.isArray(s.N) && Array.isArray(s.L) && s.P && typeof s.cable === 'number' ? s : null;
+  }catch(e){ return null; }
+}
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 
 let S = load() || preset();
 let mode = 'move', sel = null, pend = null, drag = null;
 const price = t => (S.P[t] ?? CAT[t].p);
+const find = id => S.N.find(n => n.id === id);
+
+// ---------- วิเคราะห์ผัง ----------
+function analyze(){
+  const used = {}, adj = {};
+  S.N.forEach(n => adj[n.id] = []);
+  S.L.forEach(l => {
+    const a = find(l.a), b = find(l.b); if(!a || !b) return;
+    adj[a.id].push(b.id); adj[b.id].push(a.id);
+    if(CAT[a.t].wireless || CAT[b.t].wireless) return;
+    used[a.id] = (used[a.id]||0) + 1; used[b.id] = (used[b.id]||0) + 1;
+  });
+  // ต่อถึงอินเทอร์เน็ตได้ไหม (เดินจากโหนดอินเทอร์เน็ต)
+  const reach = new Set(), q = S.N.filter(n => n.t === 'internet').map(n => n.id);
+  q.forEach(id => reach.add(id));
+  while(q.length){ const id = q.shift(); adj[id].forEach(o => { if(!reach.has(o)){ reach.add(o); q.push(o); } }); }
+  const over = new Set(S.N.filter(n => (used[n.id]||0) > CAT[n.t].ports).map(n => n.id));
+  const cnt = {}; S.N.forEach(n => cnt[n.t] = (cnt[n.t]||0) + 1);
+  return {used, reach, over, cnt};
+}
 
 // ---------- วาดแผนผัง ----------
-function render(){
-  const nm = Object.fromEntries(S.N.map(n => [n.id, n]));
-  let h = `<rect x="20" y="330" width="430" height="350" rx="14" fill="var(--z1)" stroke="var(--bd)"/>
-    <text x="36" y="356" font-size="16" font-weight="600" fill="var(--tx)">โซนที่ 1: ลูกค้านั่งใช้ Wi-Fi (20 คน)</text>
-    <rect x="470" y="330" width="710" height="350" rx="14" fill="var(--z2)" stroke="var(--bd)"/>
-    <text x="486" y="356" font-size="16" font-weight="600" fill="var(--tx)">โซนที่ 2: ที่นั่งเสียบสาย LAN 10 ที่ และหลังเคาน์เตอร์</text>
-    <text x="486" y="660" font-size="13" fill="var(--mu)">เครื่อง POS ×2 และเครื่องทำงาน ×2</text>`;
+function rounded(pts, r){
+  let d = `M${pts[0][0]} ${pts[0][1]}`;
+  for(let i=1;i<pts.length-1;i++){
+    const [px,py]=pts[i-1],[x,y]=pts[i],[nx,ny]=pts[i+1];
+    const l1=Math.hypot(x-px,y-py), l2=Math.hypot(nx-x,ny-y), rr=Math.min(r,l1/2,l2/2);
+    d += `L${x+(px-x)/l1*rr} ${y+(py-y)/l1*rr}Q${x} ${y} ${x+(nx-x)/l2*rr} ${y+(ny-y)/l2*rr}`;
+  }
+  const e = pts[pts.length-1]; return d + `L${e[0]} ${e[1]}`;
+}
+function linkPath(a,b){
+  const dx = Math.abs(b.x - a.x), dy = Math.abs(b.y - a.y);
+  if(dx < 6 || dy < 6) return `M${a.x} ${a.y}L${b.x} ${b.y}`;
+  if(dy < 40){ const mx = (a.x + b.x)/2; return rounded([[a.x,a.y],[mx,a.y],[mx,b.y],[b.x,b.y]],14); }
+  const down = b.y > a.y;
+  let my = down ? b.y - NH/2 - 16 : b.y + NH/2 + 16;
+  if(down ? my < a.y + NH/2 + 8 : my > a.y - NH/2 - 8) my = (a.y + b.y)/2;
+  return rounded([[a.x,a.y],[a.x,my],[b.x,my],[b.x,b.y]],14);
+}
+function render(canvasOnly){
+  const A = analyze();
+  const halo = 'paint-order="stroke" stroke-linejoin="round"';
+  let h = `<defs><pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.3" fill="var(--dot)"/></pattern></defs>
+    <rect width="1280" height="780" fill="url(#dots)"/>
+    <rect x="20" y="10" width="740" height="170" rx="22" fill="var(--z0)" stroke="var(--z0b)" stroke-width="1.5"/>
+    <text x="40" y="38" font-size="16" font-weight="600" fill="var(--core)">ห้องเครือข่าย · อินเทอร์เน็ตเข้ามาทางนี้ แล้วกระจายออกจากสวิตช์</text>
+    <rect x="790" y="10" width="470" height="170" rx="22" fill="none" stroke="var(--bd2)" stroke-width="2" stroke-dasharray="8 8"/>
+    <text x="812" y="38" font-size="16" font-weight="600" fill="var(--mu)">อุปกรณ์ใหม่จะมาอยู่ตรงนี้ → ลากไปวางในผัง</text>
+
+    <rect x="20" y="200" width="420" height="560" rx="22" fill="var(--z1)" stroke="var(--z1b)" stroke-width="1.5"/>
+    <text x="42" y="236" font-size="22" font-weight="700" fill="var(--wifi)" style="font-family:Prompt,'Noto Sans Thai',sans-serif">โซน 1 · Wi-Fi สำหรับลูกค้า</text>
+    <text x="42" y="260" font-size="16" fill="var(--mu)">รองรับ 20 คน ใช้ Access Point 2 ตัว</text>
+
+    <rect x="460" y="200" width="800" height="560" rx="22" fill="var(--z2)" stroke="var(--z2b)" stroke-width="1.5"/>
+    <text x="1238" y="236" font-size="22" font-weight="700" text-anchor="end" fill="var(--lan)" style="font-family:Prompt,'Noto Sans Thai',sans-serif">โซน 2 · ที่นั่งเสียบสาย LAN</text>
+    <text x="1238" y="260" font-size="16" text-anchor="end" fill="var(--mu)">10 ที่นั่ง และเครื่องหลังเคาน์เตอร์</text>
+    <path d="M482 552H1238" stroke="var(--z2b)" stroke-width="2" stroke-dasharray="3 8" stroke-linecap="round"/>
+    <text x="1238" y="578" font-size="15" font-weight="600" text-anchor="end" fill="var(--mu)">หลังเคาน์เตอร์ · POS ×2 และเครื่องทำงาน ×2</text>`;
+
+  // เส้นเชื่อม
   S.L.forEach((l,i) => {
-    const a = nm[l.a], b = nm[l.b]; if(!a||!b) return;
+    const a = find(l.a), b = find(l.b); if(!a||!b) return;
     const wl = CAT[a.t].wireless || CAT[b.t].wireless;
     const on = sel && sel.k === 'l' && sel.i === i;
-    h += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${on?'var(--ac)':'var(--ln)'}" stroke-width="${on?4:2}" ${wl?'stroke-dasharray="7 6"':''}/>
-          <line data-l="${i}" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="transparent" stroke-width="16" style="cursor:pointer"/>`;
+    const d = linkPath(a,b);
+    h += `<path d="${d}" fill="none" stroke="${on?'var(--accent)':wl?'var(--wifi)':'var(--ln)'}" stroke-width="${on?5:3}" stroke-linecap="round" stroke-linejoin="round" ${wl?'stroke-dasharray="2 8"':''}/>
+          <path data-l="${i}" d="${d}" fill="none" stroke="transparent" stroke-width="22" style="cursor:pointer"/>`;
   });
+
+  // อุปกรณ์
   S.N.forEach(n => {
     const c = CAT[n.t], on = sel && sel.k === 'n' && sel.i === n.id, pd = pend === n.id;
-    h += `<g data-id="${n.id}" transform="translate(${n.x-50},${n.y-32})" style="cursor:${mode==='link'?'crosshair':'grab'}">
-      <rect width="100" height="64" rx="10" fill="var(--card)" stroke="${on||pd?'var(--ac)':'var(--bd)'}" stroke-width="${on||pd?3:1.5}"/>
-      <text x="50" y="24" font-size="22" text-anchor="middle">${c.i}</text>
-      <text x="50" y="43" font-size="11" text-anchor="middle" fill="var(--tx)">${c.n}</text>
-      <text x="50" y="57" font-size="11" font-weight="700" text-anchor="middle" fill="var(--ac)">${c.free ? 'ฟรี/ของลูกค้า' : baht(price(n.t))}</text>
+    const lost = !A.reach.has(n.id), full = A.over.has(n.id);
+    const stroke = on||pd ? 'var(--accent)' : full ? 'var(--bad)' : lost ? 'var(--warn)' : 'var(--bd2)';
+    const sw = on||pd ? 3.5 : (full||lost) ? 2.5 : 1.5;
+    const dash = lost && !on && !pd && !full ? 'stroke-dasharray="6 4"' : '';
+    const badge = full ? ['พอร์ตเต็ม','var(--bad)'] : lost ? ['ยังไม่ถึงอินเทอร์เน็ต','var(--warn)'] : null;
+    h += `<g class="node${mode==='link'?' linkmode':''}${drag&&drag.id===n.id?' drag':''}" data-id="${n.id}" transform="translate(${n.x-NW/2},${n.y-NH/2})">
+      <rect class="box${pd?' pulse':''}" width="${NW}" height="${NH}" rx="16" fill="var(--card)" stroke="${stroke}" stroke-width="${sw}" ${dash}/>
+      <circle cx="${NW/2}" cy="31" r="21" fill="var(--${c.k}-t)"/>
+      <g transform="translate(${NW/2-14},17) scale(1.17)" fill="none" stroke="var(--${c.k})" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[n.t]}</g>
+      <text x="${NW/2}" y="74" font-size="16" font-weight="600" text-anchor="middle" fill="var(--ink)">${c.s}</text>
+      <text x="${NW/2}" y="90" font-size="14" text-anchor="middle" fill="${c.free?'var(--mu)':'var(--'+c.k+')'}" font-weight="${c.free?400:600}">${c.free ? c.tag : baht(price(n.t))}</text>
+      ${badge ? `<g transform="translate(${NW/2},-12)"><rect x="-62" y="-12" width="124" height="24" rx="12" fill="${badge[1]}"/><text y="5" font-size="13" font-weight="600" text-anchor="middle" fill="var(--card)">${badge[0]}</text></g>` : ''}
     </g>`;
   });
   svg.innerHTML = h;
-  summary();
   hint();
+  toolState();
+  if(!canvasOnly) summary(A);
 }
 
-// ---------- สรุปราคาและตรวจจำนวนพอร์ต ----------
-function summary(){
-  const cnt = {}; S.N.forEach(n => cnt[n.t] = (cnt[n.t]||0) + 1);
+// ---------- แถบเครื่องมือ / คำแนะนำ ----------
+const I_HAND = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/></svg>';
+const I_LINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg>';
+function hint(){
+  const el = $('#hint');
+  if(mode === 'link'){
+    el.className = 'hint ' + (pend ? 'pend' : 'link');
+    el.innerHTML = I_LINK + (pend
+      ? '<span><b>ขั้น 2 จาก 2:</b> แตะอุปกรณ์ปลายทางที่จะต่อด้วย (กด Esc หรือแตะที่ว่างเพื่อยกเลิก)</span>'
+      : '<span><b>ขั้น 1 จาก 2:</b> แตะอุปกรณ์ต้นทาง แล้วแตะอุปกรณ์ปลายทาง ระบบจะลากสายให้เอง</span>');
+  } else {
+    el.className = 'hint';
+    el.innerHTML = I_HAND + '<span>ลากอุปกรณ์เพื่อย้ายตำแหน่ง · แตะเพื่อเลือก แล้วกด "ลบ" ถ้าไม่ต้องการ</span>';
+  }
+}
+function toolState(){
+  const b = $('#bDel');
+  let label = 'ลบที่เลือก', can = false;
+  if(sel){
+    can = true;
+    if(sel.k === 'n'){ const n = find(sel.i); label = n ? 'ลบ "' + CAT[n.t].s + '"' : 'ลบที่เลือก'; }
+    else label = 'ลบสายที่เลือก';
+  }
+  b.disabled = !can; $('#delTx').textContent = label;
+}
+
+// ---------- สรุปราคา / เช็กลิสต์ / พอร์ต ----------
+function summary(A){
+  const {used, reach, over, cnt} = A;
+  // ตารางราคา
   const wired = S.L.filter(l => {
-    const a = S.N.find(n => n.id === l.a), b = S.N.find(n => n.id === l.b);
+    const a = find(l.a), b = find(l.b);
     return a && b && !CAT[a.t].wireless && !CAT[b.t].wireless;
   }).length;
   let total = 0, rows = '';
   Object.keys(CAT).forEach(t => {
     if(!cnt[t]) return;
-    const sub = CAT[t].free ? 0 : cnt[t] * price(t); total += sub;
-    rows += `<tr><td>${CAT[t].i} ${CAT[t].n}</td><td>${cnt[t]}</td>
-      <td>${CAT[t].free ? '-' : `<input type="number" min="0" value="${price(t)}" data-p="${t}" aria-label="ราคา ${CAT[t].n}">`}</td>
-      <td>${baht(sub)}</td></tr>`;
+    const c = CAT[t], sub = c.free ? 0 : cnt[t] * price(t); total += sub;
+    rows += `<tr><td><div class="nm"><span class="ic k-${c.k}">${svgI(t,17)}</span>${c.n}</div></td><td>${cnt[t]}</td>
+      <td>${c.free ? '<span style="color:var(--mu)">ไม่คิด</span>' : `<input type="number" min="0" inputmode="numeric" value="${price(t)}" data-p="${t}" aria-label="ราคา ${c.n}">`}</td>
+      <td class="sum">${baht(sub)}</td></tr>`;
   });
   const cableSub = wired * S.cable; total += cableSub;
-  rows += `<tr><td>🔌 สาย LAN (${wired} เส้น)</td><td>${wired}</td>
-    <td><input type="number" min="0" value="${S.cable}" data-cable aria-label="ราคาสาย LAN ต่อเส้น"></td><td>${baht(cableSub)}</td></tr>`;
+  rows += `<tr><td><div class="nm"><span class="ic k-core"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v5M15 3v5M7 8h10v4a5 5 0 0 1-10 0zM12 17v4"/></svg></span>สาย LAN</div></td><td>${wired}</td>
+    <td><input type="number" min="0" inputmode="numeric" value="${S.cable}" data-cable aria-label="ราคาสาย LAN ต่อเส้น"></td><td class="sum">${baht(cableSub)}</td></tr>`;
   $('#bom').innerHTML = rows;
   $('#total').textContent = baht(total);
+  $('#totalNote').textContent = `อุปกรณ์ ${S.N.length} ชิ้น · สาย LAN ${wired} เส้น`;
 
-  const seats = cnt.seat||0, wifi = (cnt.wifi||0) * 10;
-  const seatOk = seats === 10, wifiOk = wifi === 20;
-  $('#stats').innerHTML =
-    `<div class="${seatOk?'good':'bad'}"><b>${seats} / 10</b>ที่นั่ง LAN</div>
-     <div class="${wifiOk?'good':'bad'}"><b>${wifi} / 20</b>ลูกค้า Wi-Fi</div>
-     <div class="${(cnt.pos||0)===2?'good':'bad'}"><b>${cnt.pos||0} / 2</b>เครื่อง POS</div>
-     <div class="${(cnt.pc||0)===2?'good':'bad'}"><b>${cnt.pc||0} / 2</b>เครื่องทำงาน</div>`;
-
-  const used = {}; S.L.forEach(l => {
-    const a = S.N.find(n => n.id === l.a), b = S.N.find(n => n.id === l.b);
-    if(!a || !b || CAT[a.t].wireless || CAT[b.t].wireless) return;
-    used[a.id] = (used[a.id]||0) + 1; used[b.id] = (used[b.id]||0) + 1;
+  // เช็กลิสต์
+  const items = [];
+  GOALS.forEach(g => {
+    const have = (cnt[g.t]||0) * g.per, want = g.want, ok = have === want;
+    let msg;
+    if(ok) msg = `ครบ ${want} ${g.unit}แล้ว`;
+    else if(have < want) msg = `ต้องมี ${want} ${g.unit} · ตอนนี้ ${have} · ขาดอีก ${want-have}`;
+    else msg = `ต้องมี ${want} ${g.unit} · ตอนนี้ ${have} · เกินมา ${have-want} (เลือกแล้วกดลบ)`;
+    items.push({ok, t:g.label, m:msg, add: have < want ? g.t : null});
   });
-  let w = '';
-  S.N.forEach(n => { if((used[n.id]||0) > CAT[n.t].ports) w += `<p class="warn">⚠ ${CAT[n.t].n} ใช้ ${used[n.id]} พอร์ต แต่มีแค่ ${CAT[n.t].ports} พอร์ต</p>`; });
-  const sw = S.N.find(n => n.t === 'switch');
-  if(sw) w += `<p class="hint">สวิตช์ใช้ไป ${used[sw.id]||0} / ${CAT.switch.ports} พอร์ต</p>`;
-  $('#warn').innerHTML = w;
+  const lost = S.N.filter(n => !reach.has(n.id)).length;
+  const hasNet = !!cnt.internet;
+  items.push({ok: hasNet && lost === 0, t:'ทุกอุปกรณ์ต่อถึงอินเทอร์เน็ต',
+    m: !hasNet ? 'ยังไม่มีอุปกรณ์ "อินเทอร์เน็ต" ในผัง' : lost === 0 ? 'ต่อครบทุกชิ้นแล้ว' : `ยังมี ${lost} ชิ้นที่ต่อไม่ถึง (กรอบเส้นประสีส้มบนผัง)`,
+    add: hasNet ? null : 'internet'});
+  items.push({ok: over.size === 0, t:'ไม่มีอุปกรณ์ที่พอร์ตเต็ม',
+    m: over.size === 0 ? 'จำนวนสายอยู่ในขีดจำกัดทุกชิ้น' : `มี ${over.size} ชิ้นที่ใช้พอร์ตเกิน (กรอบสีแดงบนผัง)`});
+  const pass = items.filter(i => i.ok).length, all = pass === items.length;
+  $('#chk').innerHTML =
+    (all ? `<div class="allok">${CHECK} ผ่านครบทุกข้อแล้ว ผังนี้ใช้ได้</div>` : '') +
+    `<div class="prog"><div class="bar${all?' done':''}"><i style="width:${pass/items.length*100}%"></i></div><b>${pass}/${items.length} ข้อ</b></div>
+     <ul class="checks">` + items.map(i =>
+      `<li class="ck ${i.ok?'ok':'bad'}"><span class="mark">${i.ok?CHECK:ALERT}</span>
+        <div class="ct"><b>${i.t}</b><small>${i.m}</small></div>
+        ${i.add ? `<button class="mini" data-add="${i.add}">+ เพิ่ม</button>` : ''}</li>`).join('') + '</ul>';
+
+  // พอร์ต
+  const pn = S.N.filter(n => CAT[n.t].ports > 1);
+  $('#ports').innerHTML = pn.length ? pn.map(n => {
+    const u = used[n.id]||0, mx = CAT[n.t].ports;
+    return `<div class="port${u>mx?' over':''}"><span>${CAT[n.t].s}</span><div class="bar"><i style="width:${Math.min(100,u/mx*100)}%"></i></div><b>${u}/${mx}</b></div>`;
+  }).join('') + '<p class="note" style="margin:8px 0 0">แถบเต็ม = ใช้พอร์ตครบแล้ว สายไร้สายไม่นับพอร์ต</p>'
+    : '<p class="empty">ยังไม่มีโมเด็ม เราเตอร์ หรือสวิตช์ในผัง</p>';
   save();
 }
-function hint(){
-  $('#hint').textContent = mode === 'link'
-    ? (pend ? 'เลือกอุปกรณ์ปลายทางเพื่อเชื่อมสาย' : 'เลือกอุปกรณ์ต้นทาง แล้วเลือกอุปกรณ์ปลายทาง (เส้นประ = ไร้สาย)')
-    : 'ลากอุปกรณ์เพื่อย้าย แตะอุปกรณ์หรือเส้นเพื่อเลือก แล้วกด "ลบที่เลือก"';
-}
 
-// ---------- โต้ตอบ ----------
+// ---------- โต้ตอบบนผัง ----------
 function pt(e){
   const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY;
   return p.matrixTransform(svg.getScreenCTM().inverse());
 }
+svg.addEventListener('touchstart', e => { if(e.target.closest('[data-id]')) e.preventDefault(); }, {passive:false});
 svg.addEventListener('pointerdown', e => {
   const g = e.target.closest('[data-id]'), l = e.target.closest('[data-l]');
   if(g){
@@ -209,9 +515,9 @@ svg.addEventListener('pointerdown', e => {
       }
     } else {
       sel = {k:'n', i:id};
-      const n = S.N.find(n => n.id === id), p = pt(e);
-      drag = {id, dx:n.x-p.x, dy:n.y-p.y};
-      svg.setPointerCapture(e.pointerId);
+      const n = find(id), p = pt(e);
+      drag = {id, dx:n.x-p.x, dy:n.y-p.y, moved:false};
+      try{ svg.setPointerCapture(e.pointerId); }catch(_){}
     }
   } else if(l){ sel = {k:'l', i:+l.dataset.l}; }
   else { sel = null; pend = null; }
@@ -219,12 +525,15 @@ svg.addEventListener('pointerdown', e => {
 });
 svg.addEventListener('pointermove', e => {
   if(!drag) return;
-  const n = S.N.find(n => n.id === drag.id), p = pt(e);
-  n.x = Math.max(55, Math.min(1145, Math.round(p.x + drag.dx)));
-  n.y = Math.max(35, Math.min(665, Math.round(p.y + drag.dy)));
-  render();
+  const n = find(drag.id), p = pt(e);
+  n.x = Math.max(NW/2+4, Math.min(1280-NW/2-4, Math.round(p.x + drag.dx)));
+  n.y = Math.max(NH/2+26, Math.min(780-NH/2-4, Math.round(p.y + drag.dy)));
+  drag.moved = true;
+  render(true);                      // ระหว่างลากวาดแค่ผัง ไม่คำนวณสรุปทุกเฟรม
 });
-svg.addEventListener('pointerup', () => { drag = null; });
+function endDrag(){ if(!drag) return; drag = null; render(); }
+svg.addEventListener('pointerup', endDrag);
+svg.addEventListener('pointercancel', endDrag);
 
 function setMode(m){
   mode = m; pend = null;
@@ -241,9 +550,10 @@ function delSel(){
 $('#bMove').onclick = () => setMode('move');
 $('#bLink').onclick = () => setMode('link');
 $('#bDel').onclick = delSel;
-$('#bReset').onclick = () => { if(confirm('กลับเป็นผังตัวอย่างและราคาเริ่มต้น?')){ S = preset(); sel = null; render(); } };
+$('#bReset').onclick = () => { if(confirm('เริ่มใหม่เป็นผังตัวอย่างและราคาเริ่มต้น? งานที่แก้ไว้จะหายไป')){ S = preset(); sel = null; pend = null; render(); } };
 document.addEventListener('keydown', e => {
-  if((e.key === 'Delete' || e.key === 'Backspace') && !/INPUT/.test(document.activeElement.tagName)) delSel();
+  if(e.key === 'Escape'){ pend = null; sel = null; render(); return; }
+  if((e.key === 'Delete' || e.key === 'Backspace') && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){ e.preventDefault(); delSel(); }
 });
 $('#bom').addEventListener('change', e => {
   const v = Math.max(0, +e.target.value || 0);
@@ -252,15 +562,23 @@ $('#bom').addEventListener('change', e => {
   render();
 });
 
-// ---------- แถบเลือกอุปกรณ์ ----------
-let k = 0;
-$('#pal').innerHTML = Object.keys(CAT).map(t =>
-  `<button data-add="${t}">${CAT[t].i} ${CAT[t].n}<small>${CAT[t].free ? 'ฟรี' : baht(CAT[t].p)}</small></button>`).join('');
-$('#pal').addEventListener('click', e => {
-  const b = e.target.closest('[data-add]'); if(!b) return;
-  const id = uid(); k = (k + 1) % 8;
-  S.N.push({id, t:b.dataset.add, x:80 + k*30, y:250 + k*10});
-  sel = {k:'n', i:id}; render();
+// ---------- เพิ่มอุปกรณ์ (วางในช่อง "อุปกรณ์ใหม่" ด้านขวาบน) ----------
+const SLOTS = [[865,108],[1010,108],[1155,108]];
+function addDevice(t){
+  let pos = SLOTS.find(([x,y]) => !S.N.some(n => Math.abs(n.x-x) < 70 && Math.abs(n.y-y) < 50));
+  if(!pos){ const j = S.N.length % 6; pos = [SLOTS[0][0] + j*18, SLOTS[0][1] + j*10]; }
+  const id = uid();
+  S.N.push({id, t, x:pos[0], y:pos[1]});
+  sel = {k:'n', i:id}; pend = null; render();
+}
+$('#pal').innerHTML = GROUPS.map(g =>
+  `<div class="grp"><div class="gl">${g.t}</div><div class="row">` + g.items.map(t => {
+    const c = CAT[t];
+    return `<button class="chip k-${c.k}" data-add="${t}" title="กดเพื่อเพิ่ม ${c.n}">
+      <span class="ic">${svgI(t,22)}</span><span><b>${c.s}</b><small>${c.free ? 'ไม่คิดราคา' : '<em>' + baht(c.p) + '</em>'}</small></span></button>`;
+  }).join('') + '</div></div>').join('');
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-add]'); if(b) addDevice(b.dataset.add);
 });
 render();
 </script>
