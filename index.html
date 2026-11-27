@@ -169,13 +169,120 @@ td.sum{font-weight:600}
   .total b{font-size:2.1rem}
   .seg button,.btn{padding:8px 12px}
 }
+/* ---------- งบ / ระดับราคา ---------- */
+.budget{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,244,228,.18)}
+.budget .bh{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:.92rem}
+.budget .bh label{opacity:.9}
+.bin{display:flex;align-items:center;gap:4px;background:rgba(255,244,228,.12);border:1.5px solid rgba(255,244,228,.25);border-radius:12px;padding:3px 10px}
+.bin:focus-within{border-color:var(--brand-ink)}
+.bin input{width:104px;background:transparent;border:0;color:inherit;font:600 1.05rem var(--head);text-align:right;outline:none;padding:4px 0}
+.bin input::-webkit-inner-spin-button{opacity:.5}
+input[type=range]{width:100%;margin:12px 0 8px;accent-color:#F0A25C;height:22px;cursor:pointer}
+.bbar{height:10px;background:rgba(255,244,228,.16);border-radius:99px;overflow:hidden}
+.bbar i{display:block;height:100%;width:0;border-radius:99px;background:#7FD69B;transition:width .5s cubic-bezier(.2,.8,.2,1),background .3s}
+.bbar.mid i{background:#F2C26B}.bbar.over i{background:#FF8E78}
+.bmsg{display:block;margin-top:8px;font-size:.9rem;font-weight:500}
+.tiers{display:grid;gap:8px}
+.tier{display:grid;grid-template-columns:1fr auto;gap:0 10px;text-align:left;background:var(--bg);border:2px solid transparent;border-radius:14px;padding:10px 14px;transition:border-color .15s,transform .15s,background .15s}
+.tier:hover{transform:translateY(-1px);border-color:var(--bd2)}
+.tier.on{border-color:var(--accent);background:var(--accent-t)}
+.tier .tn{font:600 1rem var(--head)}
+.tier .td{grid-column:1;color:var(--mu);font-size:.84rem;line-height:1.35}
+.tier b{grid-row:1/3;grid-column:2;align-self:center;font:600 .95rem var(--head);color:var(--accent);white-space:nowrap}
+
+/* ---------- แอนิเมชันในแอป ---------- */
+@keyframes blurIn{from{opacity:0;filter:blur(14px);transform:translateY(18px) scale(.985)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes pop{0%{opacity:0;filter:blur(10px);transform:scale(.55)}60%{opacity:1;filter:blur(0);transform:scale(1.08)}100%{transform:scale(1)}}
+body.intro-on .reveal{opacity:0}
+body.entered .reveal{animation:blurIn .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--i,0)*70ms + 80ms)}
+.ni{transform-box:fill-box;transform-origin:center}
+.ni.pop{animation:pop .55s cubic-bezier(.3,1.4,.5,1) both}
+.cta,.mini,.chip,.btn{will-change:transform}
+
+/* ---------- หน้าเข้าเกม ---------- */
+body.intro-on{overflow:hidden}
+#intro{position:fixed;inset:0;z-index:100;overflow:auto;display:grid;place-items:center;padding:24px 16px;color:#FFF4E4;
+  background:radial-gradient(120% 90% at 20% 0%,rgba(74,42,24,.96),rgba(22,14,9,.97) 70%);
+  backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);
+  transition:opacity .85s cubic-bezier(.4,0,.2,1) .1s,backdrop-filter .85s,-webkit-backdrop-filter .85s}
+#intro[hidden]{display:none}
+#intro.out{opacity:0;pointer-events:none;backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0)}
+#intro .blobs{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+#intro .blobs i{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;will-change:transform;
+  transform:translate(calc(var(--mx,0)*var(--k)*1px),calc(var(--my,0)*var(--k)*1px))}
+.blobs .b1{--k:-40;width:46vmax;height:46vmax;left:-12vmax;top:-14vmax;background:#C4682A;animation:drift1 16s ease-in-out infinite alternate}
+.blobs .b2{--k:55;width:38vmax;height:38vmax;right:-10vmax;top:18vh;background:#2B6A72;animation:drift2 19s ease-in-out infinite alternate}
+.blobs .b3{--k:-25;width:34vmax;height:34vmax;left:25vw;bottom:-18vmax;background:#E0A14E;opacity:.4;animation:drift3 22s ease-in-out infinite alternate}
+@keyframes drift1{to{margin:8vmax 0 0 10vmax}}
+@keyframes drift2{to{margin:-10vmax 8vmax 0 0}}
+@keyframes drift3{to{margin:0 0 6vmax -12vmax}}
+#intro .fl{position:fixed;color:#FFF4E4;pointer-events:none;animation:floaty var(--t,9s) ease-in-out infinite alternate;opacity:var(--o,.2);filter:blur(var(--b,0px))}
+@keyframes floaty{from{transform:translateY(-14px) rotate(-6deg)}to{transform:translateY(18px) rotate(7deg)}}
+.ibox{position:relative;width:min(760px,100%);text-align:center;transition:opacity .6s,filter .6s,transform .7s cubic-bezier(.4,0,.2,1)}
+#intro.out .ibox{opacity:0;filter:blur(20px);transform:scale(1.07) translateY(-20px)}
+.ibox>*{animation:blurIn 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--d,0)*100ms + 150ms)}
+.eyebrow{display:inline-flex;gap:8px;align-items:center;background:rgba(255,244,228,.1);border:1px solid rgba(255,244,228,.22);backdrop-filter:blur(10px);border-radius:99px;padding:6px 16px;font-size:.9rem;letter-spacing:.03em}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:#7FD69B;box-shadow:0 0 0 4px rgba(127,214,155,.25);animation:blink 1.8s infinite}
+@keyframes blink{50%{box-shadow:0 0 0 8px rgba(127,214,155,0)}}
+.ibox h1{font:700 clamp(2.2rem,7vw,4.1rem)/1.15 var(--head);margin:18px 0 12px;letter-spacing:-.02em}
+.ibox h1 span{background:linear-gradient(90deg,#F6B26B,#E0763A 50%,#F6B26B);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 5s linear infinite}
+@keyframes sheen{to{background-position:200% 0}}
+.ibox .lead{font-size:1.1rem;opacity:.85;margin:0 auto 22px;max-width:520px}
+.missions{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:22px}
+.missions span{display:flex;gap:7px;align-items:center;background:rgba(255,244,228,.09);border:1px solid rgba(255,244,228,.18);border-radius:99px;padding:6px 14px 6px 10px;font-size:.9rem;backdrop-filter:blur(8px)}
+.missions svg{color:#F6B26B}
+.glass{background:rgba(255,244,228,.08);border:1px solid rgba(255,244,228,.2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:22px;padding:18px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+.glass h2{font-size:.95rem;opacity:.85;margin-bottom:12px;font-weight:500}
+.itiers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.itier{text-align:left;color:inherit;background:rgba(255,244,228,.07);border:1.5px solid rgba(255,244,228,.16);border-radius:16px;padding:14px;display:grid;gap:3px;transition:transform .25s cubic-bezier(.3,1.4,.5,1),border-color .2s,background .2s,box-shadow .2s}
+.itier:hover{transform:translateY(-4px);background:rgba(255,244,228,.12)}
+.itier.on{border-color:#F6B26B;background:rgba(246,178,107,.16);box-shadow:0 0 0 4px rgba(246,178,107,.18),0 12px 30px rgba(0,0,0,.3)}
+.itier .tn{font:600 1.1rem var(--head)}
+.itier .td{font-size:.82rem;opacity:.75;line-height:1.4;min-height:2.3em}
+.itier b{font:600 1rem var(--head);color:#F6B26B;margin-top:4px}
+.ibud{margin-top:16px;text-align:left}
+.ibud .row{display:flex;justify-content:space-between;align-items:baseline;font-size:.95rem}
+.ibud .row b{font:700 1.5rem var(--head);color:#F6B26B}
+.ibud input[type=range]{margin:8px 0 0}
+.cta{position:relative;overflow:hidden;margin-top:22px;border:0;color:#2B1A0E;font:700 1.15rem var(--head);padding:16px 44px;border-radius:99px;background:linear-gradient(135deg,#FFC27A,#E0763A);box-shadow:0 10px 40px rgba(224,118,58,.5),inset 0 1px 0 rgba(255,255,255,.5);transition:transform .25s cubic-bezier(.3,1.4,.5,1),box-shadow .25s}
+.cta:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 16px 54px rgba(224,118,58,.65),inset 0 1px 0 rgba(255,255,255,.5)}
+.cta:active{transform:scale(.97)}
+.cta::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);animation:shine 3.2s ease-in-out infinite}
+@keyframes shine{0%,60%{left:-60%}100%{left:130%}}
+.ibox small{display:block;margin-top:16px;opacity:.6;font-size:.85rem}
+.homebtn{margin-top:10px}
+@media(max-width:720px){.itiers{grid-template-columns:1fr}.itier .td{min-height:0}.cta{width:100%}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
 </style>
 </head>
-<body>
-<div class="page">
+<body class="intro-on">
+<div id="intro" role="dialog" aria-modal="true" aria-labelledby="introT">
+  <div class="blobs" aria-hidden="true"><i class="b1"></i><i class="b2"></i><i class="b3"></i></div>
+  <div id="flo" aria-hidden="true"></div>
+  <div class="ibox">
+    <span class="eyebrow" style="--d:0">เกมออกแบบเครือข่าย · ร้านกาแฟ</span>
+    <h1 id="introT" style="--d:1">ร้านกาแฟของคุณ<br><span>ต่อเน็ตแบบไหนดี?</span></h1>
+    <p class="lead" style="--d:2">ลากอุปกรณ์ ต่อสาย คุมงบให้อยู่หมัด แล้วดูว่าผังของคุณผ่านโจทย์ครบทุกข้อหรือไม่</p>
+    <div class="missions" id="missions" style="--d:3"></div>
+    <div class="glass" style="--d:4">
+      <h2>เลือกระดับอุปกรณ์ที่อยากได้</h2>
+      <div class="itiers" id="itiers"></div>
+      <div class="ibud">
+        <div class="row"><span>งบประมาณของคุณ</span><b id="iBud"></b></div>
+        <input type="range" id="iR" min="30000" max="200000" step="5000" aria-label="งบประมาณ">
+      </div>
+    </div>
+    <button class="cta" id="go" style="--d:5">เริ่มออกแบบเลย →</button>
+    <small style="--d:6">ปรับระดับราคาและงบทีหลังได้ตลอดในหน้าออกแบบ</small>
+  </div>
+</div>
+<div class="page" id="app">
   <header>
     <h1>ออกแบบแผนผังเครือข่ายร้านกาแฟ</h1>
     <p class="sub">ลากอุปกรณ์มาวาง ต่อสายให้ครบ แล้วดูราคารวมและเช็กลิสต์ได้ทันที</p>
+    <button class="btn homebtn" id="bHome"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/></svg>กลับหน้าแรก</button>
   </header>
 
   <div class="steps" aria-label="วิธีใช้">
@@ -225,6 +332,17 @@ td.sum{font-weight:600}
         <span class="lbl">ราคารวมโดยประมาณ</span>
         <b id="total"></b>
         <span class="note" id="totalNote"></span>
+        <div class="budget">
+          <div class="bh"><label for="bud">งบของลูกค้า</label><div class="bin"><span>฿</span><input type="number" id="bud" min="0" step="5000" inputmode="numeric"></div></div>
+          <input type="range" id="budR" min="30000" max="200000" step="5000" aria-label="ปรับงบประมาณ">
+          <div class="bbar" id="bbar"><i id="bfill"></i></div>
+          <span class="bmsg" id="bmsg"></span>
+        </div>
+      </section>
+      <section class="card">
+        <h2>ระดับราคาอุปกรณ์</h2>
+        <p class="note">เลือกระดับที่ลูกค้าต้องการ ราคาทุกชิ้นจะเปลี่ยนตาม (ตัวเลขคือราคารวมของผังนี้)</p>
+        <div class="tiers" id="tiers"></div>
       </section>
       <section class="card">
         <h2>เช็กลิสต์ตามโจทย์</h2>
@@ -283,6 +401,14 @@ const svgI = (t, px) => `<svg width="${px}" height="${px}" viewBox="0 0 24 24" f
 const CHECK = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
 const ALERT = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 6v8M12 18.5h.01"/></svg>';
 
+// ระดับราคา: P = ราคาต่อชิ้นที่ต่างจากค่ามาตรฐาน
+const TIERS = {
+  eco:{n:'ประหยัด',  d:'อุปกรณ์พื้นฐาน เหมาะร้านที่เพิ่งเริ่มต้น', budget:60000,
+       P:{modem:1200,router:4500,switch:5500,ap:2500,seat:250,pos:8000,pc:11000,printer:2500}, cable:40},
+  std:{n:'มาตรฐาน', d:'สมดุลระหว่างราคากับคุณภาพ ใช้ได้ยาวๆ', budget:85000, P:{}, cable:60},
+  pro:{n:'พรีเมียม', d:'เร็ว ทนทาน เสถียรที่สุด รองรับร้านโต', budget:130000,
+       P:{modem:2500,router:12000,switch:14500,ap:6500,seat:450,pos:18000,pc:22000,printer:5500}, cable:90}
+};
 const KEY = 'coffee-net-v2';
 const NW = 132, NH = 96;           // ขนาดการ์ดอุปกรณ์บนผัง
 const $ = s => document.querySelector(s);
@@ -306,18 +432,21 @@ function preset(){
     link(sw, add('seat',570+(i%5)*146, 340+Math.floor(i/5)*125));
   }
   [['pos',600],['pos',740],['pc',920],['pc',1060]].forEach(([t,x]) => link(sw, add(t,x,660)));
-  return {N, L, P:{}, cable:60};
+  return {N, L, P:{}, cable:60, tier:'std', budget:85000};
 }
 function load(){
   try{
     const s = JSON.parse(localStorage.getItem(KEY));
-    return s && Array.isArray(s.N) && Array.isArray(s.L) && s.P && typeof s.cable === 'number' ? s : null;
+    if(!(s && Array.isArray(s.N) && Array.isArray(s.L) && s.P && typeof s.cable === 'number')) return null;
+    if(typeof s.budget !== 'number') s.budget = 85000;
+    if(!s.tier) s.tier = (Object.keys(s.P).length === 0 && s.cable === 60) ? 'std' : 'custom';
+    return s;
   }catch(e){ return null; }
 }
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 
 let S = load() || preset();
-let mode = 'move', sel = null, pend = null, drag = null;
+let mode = 'move', sel = null, pend = null, drag = null, fresh = null;
 const price = t => (S.P[t] ?? CAT[t].p);
 const find = id => S.N.find(n => n.id === id);
 
@@ -397,16 +526,16 @@ function render(canvasOnly){
     const sw = on||pd ? 3.5 : (full||lost) ? 2.5 : 1.5;
     const dash = lost && !on && !pd && !full ? 'stroke-dasharray="6 4"' : '';
     const badge = full ? ['พอร์ตเต็ม','var(--bad)'] : lost ? ['ยังไม่ถึงอินเทอร์เน็ต','var(--warn)'] : null;
-    h += `<g class="node${mode==='link'?' linkmode':''}${drag&&drag.id===n.id?' drag':''}" data-id="${n.id}" transform="translate(${n.x-NW/2},${n.y-NH/2})">
+    h += `<g class="node${mode==='link'?' linkmode':''}${drag&&drag.id===n.id?' drag':''}" data-id="${n.id}" transform="translate(${n.x-NW/2},${n.y-NH/2})"><g class="ni${n.id===fresh?' pop':''}">
       <rect class="box${pd?' pulse':''}" width="${NW}" height="${NH}" rx="16" fill="var(--card)" stroke="${stroke}" stroke-width="${sw}" ${dash}/>
       <circle cx="${NW/2}" cy="31" r="21" fill="var(--${c.k}-t)"/>
       <g transform="translate(${NW/2-14},17) scale(1.17)" fill="none" stroke="var(--${c.k})" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICON[n.t]}</g>
       <text x="${NW/2}" y="74" font-size="16" font-weight="600" text-anchor="middle" fill="var(--ink)">${c.s}</text>
       <text x="${NW/2}" y="90" font-size="14" text-anchor="middle" fill="${c.free?'var(--mu)':'var(--'+c.k+')'}" font-weight="${c.free?400:600}">${c.free ? c.tag : baht(price(n.t))}</text>
       ${badge ? `<g transform="translate(${NW/2},-12)"><rect x="-62" y="-12" width="124" height="24" rx="12" fill="${badge[1]}"/><text y="5" font-size="13" font-weight="600" text-anchor="middle" fill="var(--card)">${badge[0]}</text></g>` : ''}
-    </g>`;
+    </g></g>`;
   });
-  svg.innerHTML = h;
+  svg.innerHTML = h; fresh = null;
   hint();
   toolState();
   if(!canvasOnly) summary(A);
@@ -458,7 +587,7 @@ function summary(A){
   rows += `<tr><td><div class="nm"><span class="ic k-core"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v5M15 3v5M7 8h10v4a5 5 0 0 1-10 0zM12 17v4"/></svg></span>สาย LAN</div></td><td>${wired}</td>
     <td><input type="number" min="0" inputmode="numeric" value="${S.cable}" data-cable aria-label="ราคาสาย LAN ต่อเส้น"></td><td class="sum">${baht(cableSub)}</td></tr>`;
   $('#bom').innerHTML = rows;
-  $('#total').textContent = baht(total);
+  setTotal(total); syncBudget(total); buildTiers(); buildPal(); buildIntroTiers();
   $('#totalNote').textContent = `อุปกรณ์ ${S.N.length} ชิ้น · สาย LAN ${wired} เส้น`;
 
   // เช็กลิสต์
@@ -478,6 +607,8 @@ function summary(A){
     add: hasNet ? null : 'internet'});
   items.push({ok: over.size === 0, t:'ไม่มีอุปกรณ์ที่พอร์ตเต็ม',
     m: over.size === 0 ? 'จำนวนสายอยู่ในขีดจำกัดทุกชิ้น' : `มี ${over.size} ชิ้นที่ใช้พอร์ตเกิน (กรอบสีแดงบนผัง)`});
+  items.push({ok: total <= S.budget, t:'อยู่ในงบของลูกค้า',
+    m: total <= S.budget ? `ใช้ ${baht(total)} จากงบ ${baht(S.budget)} · เหลือ ${baht(S.budget-total)}` : `เกินงบ ${baht(total-S.budget)} · ลองลดอุปกรณ์หรือเลือกระดับประหยัด`});
   const pass = items.filter(i => i.ok).length, all = pass === items.length;
   $('#chk').innerHTML =
     (all ? `<div class="allok">${CHECK} ผ่านครบทุกข้อแล้ว ผังนี้ใช้ได้</div>` : '') +
@@ -559,6 +690,7 @@ $('#bom').addEventListener('change', e => {
   const v = Math.max(0, +e.target.value || 0);
   if(e.target.dataset.p) S.P[e.target.dataset.p] = v;
   if('cable' in e.target.dataset) S.cable = v;
+  S.tier = 'custom';
   render();
 });
 
@@ -569,18 +701,118 @@ function addDevice(t){
   if(!pos){ const j = S.N.length % 6; pos = [SLOTS[0][0] + j*18, SLOTS[0][1] + j*10]; }
   const id = uid();
   S.N.push({id, t, x:pos[0], y:pos[1]});
-  sel = {k:'n', i:id}; pend = null; render();
+  sel = {k:'n', i:id}; pend = null; fresh = id; render();
 }
-$('#pal').innerHTML = GROUPS.map(g =>
-  `<div class="grp"><div class="gl">${g.t}</div><div class="row">` + g.items.map(t => {
-    const c = CAT[t];
-    return `<button class="chip k-${c.k}" data-add="${t}" title="กดเพื่อเพิ่ม ${c.n}">
-      <span class="ic">${svgI(t,22)}</span><span><b>${c.s}</b><small>${c.free ? 'ไม่คิดราคา' : '<em>' + baht(c.p) + '</em>'}</small></span></button>`;
-  }).join('') + '</div></div>').join('');
+function buildPal(){
+  $('#pal').innerHTML = GROUPS.map(g =>
+    `<div class="grp"><div class="gl">${g.t}</div><div class="row">` + g.items.map(t => {
+      const c = CAT[t];
+      return `<button class="chip k-${c.k}" data-add="${t}" title="กดเพื่อเพิ่ม ${c.n}">
+        <span class="ic">${svgI(t,22)}</span><span><b>${c.s}</b><small>${c.free ? 'ไม่คิดราคา' : '<em>' + baht(price(t)) + '</em>'}</small></span></button>`;
+    }).join('') + '</div></div>').join('');
+}
+
+// ---------- ราคารวม (นับเลขขึ้นแบบนุ่มๆ) ----------
+let shownTotal = 0, raf = 0;
+const reduce = () => matchMedia('(prefers-reduced-motion:reduce)').matches;
+function setTotal(v){
+  const el = $('#total'), from = shownTotal; shownTotal = v;
+  cancelAnimationFrame(raf);
+  if(reduce() || from === v){ el.textContent = baht(v); return; }
+  const t0 = performance.now();
+  const step = now => {
+    const k = Math.min(1, (now - t0) / 500), e = 1 - Math.pow(1 - k, 3);
+    el.textContent = baht(Math.round(from + (v - from) * e));
+    if(k < 1) raf = requestAnimationFrame(step);
+  };
+  raf = requestAnimationFrame(step);
+}
+
+// ---------- งบและระดับราคา ----------
+function wiredCount(){
+  return S.L.filter(l => { const a = find(l.a), b = find(l.b); return a && b && !CAT[a.t].wireless && !CAT[b.t].wireless; }).length;
+}
+function totalFor(k){
+  const cnt = {}; S.N.forEach(n => cnt[n.t] = (cnt[n.t]||0) + 1);
+  let sum = 0; for(const t in cnt) if(!CAT[t].free) sum += cnt[t] * (TIERS[k].P[t] ?? CAT[t].p);
+  return sum + wiredCount() * TIERS[k].cable;
+}
+function syncBudget(total){
+  const bud = Math.max(1, S.budget), pct = total / bud, left = S.budget - total;
+  const act = document.activeElement;
+  if(act !== $('#bud')) $('#bud').value = S.budget;
+  if(act !== $('#budR')) $('#budR').value = Math.min(200000, Math.max(30000, S.budget));
+  if(act !== $('#iR')) $('#iR').value = Math.min(200000, Math.max(30000, S.budget));
+  $('#iBud').textContent = baht(S.budget);
+  $('#bfill').style.width = Math.min(100, pct * 100) + '%';
+  $('#bbar').className = 'bbar' + (pct > 1 ? ' over' : pct > .9 ? ' mid' : '');
+  $('#bmsg').textContent = left >= 0 ? `เหลืองบอีก ${baht(left)} (ใช้ไป ${Math.round(pct*100)}%)` : `เกินงบ ${baht(-left)} — ลองเลือกระดับประหยัดหรือลดอุปกรณ์`;
+}
+function buildTiers(){
+  $('#tiers').innerHTML = Object.entries(TIERS).map(([k,T]) =>
+    `<button class="tier${S.tier===k?' on':''}" data-tier="${k}" aria-pressed="${S.tier===k}"><span class="tn">${T.n}</span><span class="td">${T.d}</span><b>${baht(totalFor(k))}</b></button>`).join('')
+    + (S.tier === 'custom' ? '<p class="note" style="margin:2px 0 0">ตอนนี้ใช้ราคาที่กำหนดเอง (แก้จากตารางราคา)</p>' : '');
+}
+function buildIntroTiers(){
+  $('#itiers').innerHTML = Object.entries(TIERS).map(([k,T]) =>
+    `<button class="itier${S.tier===k?' on':''}" data-tier="${k}" data-intro="1"><span class="tn">${T.n}</span><span class="td">${T.d}</span><b>ประมาณ ${baht(totalFor(k))}</b></button>`).join('');
+}
+function applyTier(k, setBudget){
+  S.tier = k; S.P = {...TIERS[k].P}; S.cable = TIERS[k].cable;
+  if(setBudget) S.budget = TIERS[k].budget;
+  render();
+}
+function setBudget(v){ S.budget = Math.max(0, Math.round(+v || 0)); render(); }
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-tier]'); if(t) applyTier(t.dataset.tier, !!t.dataset.intro);
+});
+$('#bud').addEventListener('input', e => setBudget(e.target.value));
+$('#budR').addEventListener('input', e => setBudget(e.target.value));
+$('#iR').addEventListener('input', e => setBudget(e.target.value));
+
+// ---------- หน้าเข้าเกม ----------
+const intro = $('#intro');
+$('#missions').innerHTML = GOALS.map(g =>
+  `<span>${svgI(g.t, 18)}${g.label} ${g.want} ${g.unit}</span>`).join('');
+(function floaters(){
+  const spec = [['internet',6,12,84,.16,3],['router',82,10,70,.2,0],['ap',90,52,96,.14,6],['pos',4,62,90,.18,5],
+                ['pc',72,80,76,.22,1],['wifi',14,84,66,.2,2],['switch',48,3,64,.14,4],['seat',30,70,58,.12,7],['printer',60,92,60,.12,5]];
+  $('#flo').innerHTML = spec.map(([t,x,y,sz,o,b],i) =>
+    `<span class="fl" style="left:${x}%;top:${y}%;--o:${o};--b:${b}px;--t:${8+i*1.3}s;animation-delay:${-i*1.1}s">${svgI(t,sz)}</span>`).join('');
+})();
+intro.addEventListener('pointermove', e => {
+  intro.style.setProperty('--mx', (e.clientX / innerWidth - .5) * 2);
+  intro.style.setProperty('--my', (e.clientY / innerHeight - .5) * 2);
+  intro.querySelector('.blobs').style.setProperty('--mx', (e.clientX / innerWidth - .5) * 2);
+  intro.querySelector('.blobs').style.setProperty('--my', (e.clientY / innerHeight - .5) * 2);
+});
+let introTimer = 0;
+function enterApp(){
+  try{ sessionStorage.setItem('cn-seen','1'); }catch(_){}
+  intro.classList.add('out');
+  document.body.classList.remove('intro-on');
+  document.body.classList.remove('entered'); void document.body.offsetWidth;   // เล่นแอนิเมชันเข้าใหม่
+  document.body.classList.add('entered');
+  clearTimeout(introTimer); introTimer = setTimeout(() => { intro.hidden = true; }, 1000);
+}
+function openIntro(){
+  clearTimeout(introTimer);
+  intro.hidden = false; void intro.offsetWidth;
+  intro.classList.remove('out');
+  document.body.classList.add('intro-on');
+  intro.scrollTop = 0;
+  $('.ibox').querySelectorAll(':scope>*').forEach(el => { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = ''; });
+}
+$('#go').onclick = enterApp;
+$('#bHome').onclick = openIntro;
+document.querySelectorAll('header, .step, .main > .card, .side > .card').forEach((el,i) => { el.classList.add('reveal'); el.style.setProperty('--i', i); });
+let seen = false; try{ seen = sessionStorage.getItem('cn-seen') === '1'; }catch(_){}
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-add]'); if(b) addDevice(b.dataset.add);
 });
 render();
+if(seen){ intro.hidden = true; document.body.classList.remove('intro-on'); document.body.classList.add('entered'); }
+else $('#go').focus({preventScroll:true});
 </script>
 </body>
 </html>
